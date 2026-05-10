@@ -1,0 +1,54 @@
+Abrir MongoDB Compass, conectarse a localhost:27017
+y abrir el shell (botón >_ en la barra inferior).
+
+PASO 1 - Seleccionar la base de datos
+use("AutoTrustDB")
+
+PASO 2 - Colección: modelos_imagen
+db.createCollection("modelos_imagen")
+db.modelos_imagen.createIndex({ marca: 1, modelo: 1 }, { unique: true, name: "idx_modelos_imagen_marca_modelo" })
+
+PASO 3 - Colección: vehiculos
+db.createCollection("vehiculos")
+db.vehiculos.createIndex({ numero_placa: 1 }, { unique: true, name: "idx_vehiculos_placa" })
+db.vehiculos.createIndex({ numero_motor: 1 }, { unique: true, name: "idx_vehiculos_motor" })
+db.vehiculos.createIndex({ disponible: 1 }, { name: "idx_vehiculos_disponible" })
+db.vehiculos.createIndex({ marca: 1, modelo: 1 }, { name: "idx_vehiculos_marca_modelo" })
+
+PASO 4 - Colección: clientes
+db.createCollection("clientes")
+db.clientes.createIndex({ identificacion: 1 }, { unique: true, name: "idx_clientes_identificacion" })
+db.clientes.createIndex({ correo: 1 }, { unique: true, name: "idx_clientes_correo" })
+db.clientes.createIndex({ activo: 1 }, { name: "idx_clientes_activo" })
+
+PASO 5 - Colección: funcionarios
+db.createCollection("funcionarios")
+db.funcionarios.createIndex({ identificacion: 1 }, { unique: true, name: "idx_funcionarios_identificacion" })
+db.funcionarios.createIndex({ estado: 1 }, { name: "idx_funcionarios_estado" })
+
+PASO 6 - Colección: usuarios
+db.createCollection("usuarios")
+db.usuarios.createIndex({ nombre_usuario: 1 }, { unique: true, name: "idx_usuarios_nombre_usuario" })
+db.usuarios.createIndex({ id_perfil: 1 }, { name: "idx_usuarios_perfil" })
+
+PASO 7 - Insertar funcionario administrador de prueba
+const resultAdmin = db.funcionarios.insertOne({
+    identificacion: "000000001",
+    nacionalidad: "Costarricense",
+    nombre: "Marco",
+    primer_apellido: "Rivera",
+    segundo_apellido: "Navarro",
+    fecha_nacimiento: new Date("1990-01-01"),
+    telefono: "88888888",
+    direccion: "AutoTrust S.A., Cartago",
+    fecha_ingreso: new Date("2024-01-01"),
+    estado: "Activo"
+})
+
+db.usuarios.insertOne({
+    nombre_usuario: "Marco",
+    contrasena: "Diego",
+    activo: true,
+    tipo: "funcionario",
+    id_perfil: resultAdmin.insertedId
+})
